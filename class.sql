@@ -42,3 +42,7 @@ CREATE TABLE login (
 	FOREIGN KEY (user_id) REFERENCES users(user_id),
 	FOREIGN KEY (user_name) REFERENCES users(user_id)
 );
+
+INSERT INTO users VALUES (00001, 'John', 'Moore', 'Johnny', 'john.m@gmail.com');
+INSERT INTO users VALUES (00002, 'Kim', 'Gates', 'Kimmy', 'kim.g@gmail.com');
+
