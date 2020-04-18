@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Login | ClassMe</title>
+        <!-- <link rel='stylesheet' type='text/css' href="{{ url_for ('static',filename='styles/login.css')}}"> -->
+    </head>
+    <body>
+        <div class='box'>
+            <form action ='/login' method = 'POST'>
+                <input placeholder='Username' name='username'>
+                <input placeholder='Password' name='password'>
+                <input type='submit' value='Login'>
+            </form>
+            <!-- {% if login_result == None %}
+            <div>Login error #001</div>
+            {% endif %} -->
+        </div>
+    </body>
+</html>
