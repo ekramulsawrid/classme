@@ -22,6 +22,41 @@ def user_exists(user_name, user_password):
     cur.execute(sql_match_login, (user_name, user_password))
     # login_result = cur.fetchall()
     return cur.rowcount > 0
+
+def user_registered(user_first_name, user_last_name, user_name, user_email):
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    try:
+        cur.execute('INSERT INTO users (first_name, last_name, user_name, email) VALUES (?, ?, ?, ?)',
+            (user_first_name, user_last_name, user_name, user_email))
+    except:
+        return False
+    con.commit()
+    con.close()
+    return True
+
+
+def get_users_database():
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT * FROM users')
+    users = cur.fetchall()
+    return users
+
+def get_whole_database():
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT * FROM users')
+    users = cur.fetchall()
+    cur.execute('SELECT * FROM classes')
+    classes = cur.fetchall()
+    cur.execute('SELECT * FROM posts')
+    posts = cur.fetchall()
+    cur.execute('SELECT * FROM ischedule')
+    ischedule = cur.fetchall()
+    cur.execute('SELECT * FROM login')
+    login = cur.fetchall()
+    return users, classes, posts, ischedule, login
      
 
 
