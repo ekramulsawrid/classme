@@ -18,19 +18,22 @@ def user_exists(user_name, user_password):
     # define cursor
     cur = con.cursor() # this is variable that represents thing object is going to move over to DB and find info we need
     # execute raw SQL syntex
-    sql_match_login = 'SELECT user_name, password FROM login WHERE user_name = ? AND password = ?'
-    cur.execute(sql_match_login, (user_name, user_password))
-    # login_result = cur.fetchall()
-    return cur.rowcount > 0
+    cur.execute('SELECT user_name, password FROM login WHERE user_name = ? AND password = ?', (user_name, user_password))
+    login_result = cur.fetchall()
+    #return cur.rowcount > 0
+    return (str(login_result[0][0]) == str(user_name)) and (str(login_result[0][1]) == str(user_password))
 
-def user_registered(user_first_name, user_last_name, user_name, user_email):
+def user_registered(user_first_name, user_last_name, user_name, user_email, password):
     con = sql.connect(path.join(ROOT, 'classme.DB'))
     cur = con.cursor()
     try:
         cur.execute('INSERT INTO users (first_name, last_name, user_name, email) VALUES (?, ?, ?, ?)',
             (user_first_name, user_last_name, user_name, user_email))
+        cur.execute('SELECT user_id, user_name FROM users WHERE user_name = ?', (user_name,))
+        user_info = cur.fetchall()
+        cur.execute('INSERT INTO login (user_id, user_name, password) VALUES (?, ?, ?)', (user_info[0][0], user_info[0][1], password))
     except:
-        return False
+        return False    
     con.commit()
     con.close()
     return True

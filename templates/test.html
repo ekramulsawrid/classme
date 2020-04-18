@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Database | ClassMe</title>
+        <!-- <link rel='stylesheet' type='text/css' href="{{ url_for ('static',filename='styles/index.css')}}"> -->
+    </head>
+    <body>
+        <div class='box'>
+            <div>Database</div>
+            <form action='/' method='GET'>
+                <input type='submit' value='Go back to Welcome'>
+            </form>
+            <form action='/test' method='POST'>
+                <input type='submit' value='Show Database'>
+            </form>
+            <!-- {% for user in users %}
+            <div>{{ user[0] ~ '|' ~ user[1] ~ '|' ~ user[2] ~ '|' ~ user[3] ~ '|' ~ user[4]}}</div>
+            {% endfor %} -->
+            {% for table in DB %}
+            </br>
+            <div>
+                {% for tuple in table %}
+                <div>
+                    {% for value in tuple %}
+                    <div style="display: inline-block;">&nbsp; {{ value }} &nbsp;</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

@@ -9,24 +9,41 @@ app = Flask(__name__)
 
 CORS(app)
 
+logged_in_user = None
+user_logged_in = False
+
+def log_out_user():
+    global logged_in_user
+    global user_logged_in
+    user_logged_in = False
+    logged_in_user = None
+
+def print_user():
+    print(str(logged_in_user)  + " " + str(user_logged_in))
+
 @app.route('/')
 def welcome():
+    log_out_user()
+    print_user()
     return render_template('index.html')
 
 @app.route('/index', methods = ['GET'])
 def classme():
+    log_out_user()
     return render_template('index.html')
 
 @app.route('/register', methods = ['GET', 'POST'])
 def register():
     if request.method == 'GET':
+        log_out_user()
         return render_template('register.html')
     if request.method == 'POST':
         user_first_name = request.form.get('firstname')
         user_last_name = request.form.get('lastname')
         user_name = request.form.get('username')
         user_email = request.form.get('email')
-        if user_registered(user_first_name, user_last_name, user_name, user_email) == True:
+        user_password = request.form.get('password')
+        if user_registered(user_first_name, user_last_name, user_name, user_email, user_password) == True:
             #return redirect(url_for('register_success'))
             return render_template('register.html', result = 'Register Successful!')
         else:
@@ -36,15 +53,41 @@ def register():
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'GET':
+        log_out_user()
         return render_template('login.html')
     if request.method == 'POST':
         user_name = request.form.get('username')
         user_password = request.form.get('password')
         user_exists_res = user_exists(user_name, user_password)
-        if user_exists_res > 0:
-            return render_template('login.html')
+        if user_exists_res == True:
+            #return render_template('login.html', result = 'Login Success')
+            global logged_in_user 
+            logged_in_user = user_name
+            global user_logged_in 
+            user_logged_in = True
+            return redirect(url_for('home'))
         else:
-            return redirect(url_for('welcome'))
+            return render_template('login_failed.html', result = 'Login Failed')
+
+@app.route('/home', methods = ['GET', 'POST'])
+def home():
+    if request.method == 'GET':
+        print_user()
+        if user_logged_in == True:
+            return render_template('home.html')
+        else: 
+            return redirect(url_for('no_access'))
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    if request.method == 'GET':
+        return redirect(url_for('welcome'))
+
+@app.route('/no_access')
+def no_access():
+    return render_template('no_access.html')
+
+
 
 @app.route('/test', methods=['GET', 'POST'])
 def test():
