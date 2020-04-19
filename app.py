@@ -1,4 +1,4 @@
-from models import user_exists, get_users_database, get_whole_database, user_registered
+from models import user_exists, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, get_user_id_from_user_name
 # add information about server
 from flask import Flask, render_template, request, redirect, url_for
 from flask_cors import CORS
@@ -74,7 +74,12 @@ def home():
     if request.method == 'GET':
         print_user()
         if user_logged_in == True:
-            return render_template('home.html')
+            global logged_in_user
+            user_classes = get_user_classes(logged_in_user)    
+            if len(user_classes) > 0:
+                user_class_posts = get_user_class_posts(user_logged_in, user_classes[0][0])
+            else: user_class_posts = []  
+            return render_template('home.html', username = logged_in_user, classes = user_classes, posts = user_class_posts)
         else: 
             return redirect(url_for('no_access'))
 
@@ -92,6 +97,7 @@ def no_access():
 @app.route('/test', methods=['GET', 'POST'])
 def test():
     if request.method == 'GET':
+        log_out_user()
         return render_template('test.html')
     # if request.method == 'POST':
     #     users = get_users_atabase()

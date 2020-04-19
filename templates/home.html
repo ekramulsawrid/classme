@@ -8,10 +8,65 @@
     <body>
         <div>Home</div>
         <div class='box'>
-            
         </div>
         <form action='/logout' method='GET'>
             <input type='submit' value='Go back to Welcome (Log out)'>
         </form>
+        </br>
+        <div>
+            <div>This is your ClassMe account.</div>
+            <div>Username: {{ username }}</div>
+        </div>
+        </br>
+        <div class='box'>
+            <div>Join a class:</div>
+            <form action='/' method=''>
+                <input placeholder='Enter existing class to join class' name='searchedClass'>
+                <input type='submit' value='Join'>
+            </form>
+        </div>
+        <div class='box'>
+            <div>Create a class:</div>
+            <form action='/' method=''>
+                <input placeholder='Class Name' name='createdClassName'>
+                <input placeholder='Class Section' name='createClassSection'>
+                <input placeholder='Class Year' name='createdClassYear'>
+                <input placeholder='Class Semester' name='createdClassSemester'>
+                <input type='submit' value='Create and Join'>
+            </form>
+        </div>
+        </br>
+        <div>Your classes:</div>
+        <div>
+            {% for class in classes %}
+            <div>{{ class[1] }}</div>
+            <div>&emsp;&emsp;&emsp; {{ class[2] ~ ' ' ~ class[3] ~ ' ' ~ class[4] }}</div>
+            {% endfor %}
+        </div>
+        </br>
+        </br>
+        <div class='box'>
+            <div>Search for Class Postings:</div>
+            <form action='/' method=''>
+                <input placeholder='Enter one of your classes' name='searchClassPosts'>
+                <input type='submit' value='See Posts'>
+            </form>
+        </div>
+        </br>
+        <div>
+            <div>Posts for: {{ classes[0] }}</div>
+        </div>
+        </br>
+        <div>
+            {% for post in posts %}
+                <div>{{ posts }}</div>
+            {% endfor %}
+        </div>
+        <div class='box'>
+            <form action='/register' method='POST'>
+                <input placeholder='Your Post' name='post'>
+                <input type='submit' value='Post'>
+            </form>
+        </div>
     </body>
 </html>

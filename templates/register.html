@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <title>Register | ClassMe</title>
+        <!-- <link rel='stylesheet' type='text/css' href="{{ url_for ('static',filename='styles/index.css')}}"> -->
+    </head>
+    <body>
+        <div class='box'>
+            <div>Register for an account.</div>
+            <div>Plaese fill out the information below.</div>
+            <form action='/register' method='POST'>
+                <input placeholder='FirstName' name='firstname'>
+                <input placeholder='LastName' name='lastname'>
+                <input placeholder='UserName' name='username'>
+                <input placeholder='email' name='email'>
+                <input placeholder='Password' name='password'>
+                <input type='submit' value='Submit for Registration'>
+            </form>
+            <form action='/' method='GET'>
+                <input type='submit' value='Go back to Welcome'>
+            </form>
+            <div>{{result}}</div>
+        </div>
+    </body>
+</html>

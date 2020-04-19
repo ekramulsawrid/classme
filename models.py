@@ -46,6 +46,31 @@ def get_users_database():
     users = cur.fetchall()
     return users
 
+def get_user_id_from_user_name(username):
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT user_id FROM users WHERE user_name = ?', (username,))
+    user_id = cur.fetchall()
+    print(str(user_id[0]))
+    return str(user_id[0])
+
+def get_user_classes(username):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT classes.class_name FROM users, classes, ischedule WHERE users.user_id = ischedule.user_id AND classes.class_id = ischedule.class_id and users.user_id = ?', (user_id, ))
+    user_classes = cur.fetchall()
+    return user_classes
+
+def get_user_class_posts(username, userclassid):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELET posted, message FROM posts WHERE class_id = ?', (userclassid,))
+    class_posts = cur.fetchall()
+    return class_posts
+
+
 def get_whole_database():
     con = sql.connect(path.join(ROOT, 'classme.DB'))
     cur = con.cursor()

@@ -19,7 +19,6 @@ CREATE TABLE "posts" (
 	"class_id"	INTEGER NOT NULL,
 	"user_id"	INTEGER NOT NULL,
 	"posted"	TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	"reply_to"	INTEGER NOT NULL,
 	"message"	VARCHAR(500) NOT NULL,
     FOREIGN KEY("class_id") REFERENCES "classes"("class_id"),
     FOREIGN KEY("user_id") REFERENCES "users"("user_id"),
