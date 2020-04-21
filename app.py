@@ -1,13 +1,10 @@
 from models import user_exists, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, add_class_and_join_user
 # add information about server
 from flask import Flask, render_template, request, redirect, url_for
-from flask_cors import CORS
 
 # create server object
 app = Flask(__name__)
 
-
-CORS(app)
 
 user_logged_in = False
 logged_in_user = None
@@ -39,7 +36,7 @@ def classme():
 def register():
     if request.method == 'GET':
         log_out_user()
-        return render_template('register.html')
+        return render_template('FrontEndRegister.html')
     if request.method == 'POST':
         user_first_name = request.form.get('firstname')
         user_last_name = request.form.get('lastname')
@@ -48,16 +45,16 @@ def register():
         user_password = request.form.get('password')
         if user_registered(user_first_name, user_last_name, user_name, user_email, user_password) == True:
             #return redirect(url_for('register_success'))
-            return render_template('register.html', result = 'Register Successful!')
+            return render_template('FrontEndRegister.html', result = 'Register Successful!')
         else:
             #return redirect(url_for('register_failed'))
-            return render_template('register.html', result = 'Register Failed.')
+            return render_template('FrontEndRegister.html', result = 'Register Failed.')
 
 @app.route('/login', methods = ['GET', 'POST'])
 def login():
     if request.method == 'GET':
         log_out_user()
-        return render_template('login.html')
+        return render_template('FrontEndLogin.html')
     if request.method == 'POST':
         user_name = request.form.get('username')
         user_password = request.form.get('password')
@@ -70,10 +67,12 @@ def login():
             user_logged_in = True
             return redirect(url_for('home'))
         else:
-            return render_template('login_failed.html', result = 'Login Failed')
+            return render_template('FrontEndLogin.html', result = 'Login Failed')
 
 @app.route('/home', methods = ['GET', 'POST'])
 def home():
+    global logged_in_user
+    global current_class_id
     if request.method == 'GET':
         print_user()
         if user_logged_in == True:
@@ -83,7 +82,6 @@ def home():
             # print(logged_in_user)
             # print(user_classes)  
             if len(user_classes) > 0:
-                global logged_in_user
                 user_class_posts = get_user_class_posts(logged_in_user, user_classes[0][0])
                 global current_class_id
                 if current_class_id == None:
@@ -103,8 +101,6 @@ def home():
         message = request.form.get('post')
         if message != None:
             print('Add post POST')
-            global logged_in_user
-            global current_class_id
             print(current_class_id)
             if current_class_id == None:
                 return redirect(url_for('home'))
@@ -116,7 +112,6 @@ def home():
         if searched_class_id != None:
             if (is_in_class(logged_in_user, searched_class_id) == True):
                 print(is_in_class(logged_in_user, searched_class_id))
-                global current_class_id 
                 current_class_id = searched_class_id
                 print("current id" + str(current_class_id))
                 return redirect(url_for('home'))

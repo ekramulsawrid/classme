@@ -2,7 +2,6 @@
 
 import sqlite3 as sql
 from os import path
-
  
 ROOT = path.dirname(path.relpath((__file__)))
 
@@ -189,7 +188,3 @@ def get_whole_database():
     login = cur.fetchall()
     return users, classes, posts, ischedule, login
      
-
-
-
-
