@@ -1,0 +1,39 @@
+body 
+{
+    margin: 0;
+    padding: 0;
+}
+.signup{
+    width: 300px;
+    box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
+    background:white;
+    padding: 20px;
+    margin: 8% auto 0;
+    text-align: center;
+}
+.signup h1{
+    color: blueviolet;
+    margin-bottom: 30px;
+}
+.inputbox
+{
+    border-radius: 20px;
+    padding: 10px;
+    margin:10px;
+    width: 90%;
+    border:1px solid #999;
+    outline: none;
+}
+.sub
+{
+    color: #fff;
+    width: 100%;
+    padding: 10p;
+    border-radius:20px;
+    font-size: 15px;
+    margin: 10px 0;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background-color: #1c8adb;
+}

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <link rel='stylesheet' type='text/css' href="{{ url_for ('static',filename='styles/FrontEndRegisterStyle.css')}}">
+        <meta charset="urf-8">
+        <title>Register | ClassMe</title>
+        <!-- <link rel="stylesheet" href="style.css" type="text/css"> -->
+        <link href="https://fonts.googleapis.com/css?family=Fjalla+One" href="stylesheet">
+    </head>    
+    <style>
+        html {
+            background-image: url({{ url_for ('static',filename='styles/classroom.jpg')}});
+            text-align: center;
+            height: 100%;
+            width: 100%;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }   
+    </style>
+    <body>
+        <section class="signup">
+        <h1>Sign Up</h1>
+        <p>Create an account</p>
+        <form action="/register" method="POST">
+            <label for="username">Username: </label>
+            <br>
+            <input id="username" name="username" type="text" class="inputbox" required minlength="1">
+            <br>
+            <label for="pw">Password:</label>
+            <br>
+            <input id="pw" name="password" type="password" class="inputbox" required minlength="1">
+            <br>
+            <label for="firstname">First Name:</label>
+            <br>
+            <input id="firstname" name="firstname" type="text" class="inputbox" required minlength="1">
+            <br>
+            <label for="lastname"> Last Name: </label>
+            <br>
+            <input id="lastname" name="lastname" type="text" class="inputbox">
+            <br>
+            <label for="email">Email: </label>
+            <br>
+            <input id="email" name="email" class="inputbox" type="email" required minlength="1">
+            <br>
+            <br>
+            <div>{{result}}</div>
+            <br>
+            <br>
+            <input type="submit" value="Register" class="sub" >
+        </form>
+        <form action='/' method='GET'>
+            <input type='submit' value='Go back to Welcome' class='sub'>
+        </form>
+    </section>
+    </body>
+</html>
