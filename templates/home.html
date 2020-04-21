@@ -20,14 +20,14 @@
         </br>
         <div class='box'>
             <div>Join a class:</div>
-            <form action='/' method=''>
-                <input placeholder='Enter existing class to join class' name='searchedClass'>
+            <form action='/home' method='POST'>
+                <input placeholder='Enter existing class ID' name='searchedClassID'>
                 <input type='submit' value='Join'>
             </form>
         </div>
         <div class='box'>
-            <div>Create a class:</div>
-            <form action='/' method=''>
+            <div>Create a Class and Join:</div>
+            <form action='/home' method='POST'>
                 <input placeholder='Class Name' name='createdClassName'>
                 <input placeholder='Class Section' name='createClassSection'>
                 <input placeholder='Class Year' name='createdClassYear'>
@@ -37,33 +37,35 @@
         </div>
         </br>
         <div>Your classes:</div>
-        <div>
-            {% for class in classes %}
-            <div>{{ class[1] }}</div>
-            <div>&emsp;&emsp;&emsp; {{ class[2] ~ ' ' ~ class[3] ~ ' ' ~ class[4] }}</div>
-            {% endfor %}
-        </div>
+        
+        {% for class in classes %}
+            <div>{{ class[0] ~ ' ' ~ class[1] ~ ' ' ~ class[2] ~ ' ' ~ class[3] ~ ' ' ~ class[4] }}</div>
+        {% endfor %}
+        
         </br>
         </br>
         <div class='box'>
-            <div>Search for Class Postings:</div>
-            <form action='/' method=''>
-                <input placeholder='Enter one of your classes' name='searchClassPosts'>
+            <div>Go to Another Class (Enter class ID):</div>
+            <form action='/home' method='POST'>
+                <input placeholder='Enter one of your class ID' name='searchClassPosts'>
                 <input type='submit' value='See Posts'>
             </form>
         </div>
         </br>
         <div>
-            <div>Posts for: {{ classes[0] }}</div>
+            <div>Posts for: {{ currentClass }}</div>
         </div>
         </br>
         <div>
             {% for post in posts %}
-                <div>{{ posts }}</div>
+                <div>&emsp;&emsp;{{ post[1] }}</div>
+                <div>{{post[0]}}:</div>
+                <div>{{ post[2] }}</div>
+                </br>
             {% endfor %}
         </div>
         <div class='box'>
-            <form action='/register' method='POST'>
+            <form action='/home' method='POST'>
                 <input placeholder='Your Post' name='post'>
                 <input type='submit' value='Post'>
             </form>

@@ -1,37 +1,40 @@
 # this file is going to interact with our DB
-# we created a DB, we creating server to handle requests, now we a way for server to interact with DB
-# we are going to use a thin layer of functions that our server is going to use to add/remove from DB
-# when we get this file, it will allow server to interact with DB
 
 import sqlite3 as sql
 from os import path
 
-# this is basically saying: get directory name, then direct path to whatever file we pass in sa the file for this function
+ 
 ROOT = path.dirname(path.relpath((__file__)))
 
-def user_exists(user_name, user_password):
-    # create connection to DB
-    con = sql.connect(path.join(ROOT, 'classme.DB')) # we just created connection to DB
-
-    # in order to effiently traverse DB and find info we need, we need to use cursor
-    # cursor, instead of gradding whole database, it goes to what we need and makes it more efficient
-    # define cursor
-    cur = con.cursor() # this is variable that represents thing object is going to move over to DB and find info we need
-    # execute raw SQL syntex
-    cur.execute('SELECT user_name, password FROM login WHERE user_name = ? AND password = ?', (user_name, user_password))
+def user_exists(username, password):
+    user_id = None
+    try:
+        user_id = get_user_id_from_user_name(username)
+    except:
+        False
+    con = sql.connect(path.join(ROOT, 'classme.DB')) 
+    cur = con.cursor() 
+    cur.execute('PRAGMA foreign_keys = ON')
+    cur.execute('SELECT user_id, password FROM login WHERE user_id = ? AND password = ?', (user_id, password))
     login_result = cur.fetchall()
-    #return cur.rowcount > 0
-    return (str(login_result[0][0]) == str(user_name)) and (str(login_result[0][1]) == str(user_password))
+    con.close()
+    try:
+        test = login_result[0][0]
+        test = login_result[0][1]
+    except:
+        return False
+    return (str(login_result[0][0]) == str(user_id)) and (str(login_result[0][1]) == str(password))
 
 def user_registered(user_first_name, user_last_name, user_name, user_email, password):
     con = sql.connect(path.join(ROOT, 'classme.DB'))
     cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON')
     try:
         cur.execute('INSERT INTO users (first_name, last_name, user_name, email) VALUES (?, ?, ?, ?)',
             (user_first_name, user_last_name, user_name, user_email))
-        cur.execute('SELECT user_id, user_name FROM users WHERE user_name = ?', (user_name,))
+        cur.execute('SELECT user_id FROM users WHERE user_name = ?', (user_name,))
         user_info = cur.fetchall()
-        cur.execute('INSERT INTO login (user_id, user_name, password) VALUES (?, ?, ?)', (user_info[0][0], user_info[0][1], password))
+        cur.execute('INSERT INTO login VALUES (?, ?)', (user_info[0][0], password))
     except:
         return False    
     con.commit()
@@ -47,29 +50,129 @@ def get_users_database():
     return users
 
 def get_user_id_from_user_name(username):
+    print('username')
+    print(username)
     con = sql.connect(path.join(ROOT, 'classme.DB'))
     cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON')
     cur.execute('SELECT user_id FROM users WHERE user_name = ?', (username,))
     user_id = cur.fetchall()
-    print(str(user_id[0]))
-    return str(user_id[0])
+    con.close()
+    print('userid')
+    print(user_id)
+    print(user_id[0])
+    print(user_id[0][0])
+    print('userid_finish')
+    # print(user_id[0][0])
+    return user_id[0][0]
 
 def get_user_classes(username):
     user_id = get_user_id_from_user_name(username)
     con = sql.connect(path.join(ROOT, 'classme.DB'))
     cur = con.cursor()
-    cur.execute('SELECT classes.class_name FROM users, classes, ischedule WHERE users.user_id = ischedule.user_id AND classes.class_id = ischedule.class_id and users.user_id = ?', (user_id, ))
+    cur.execute('SELECT classes.class_id, classes.class_name, classes.class_section, classes.class_year, classes.class_semester FROM users, classes, ischedule WHERE users.user_id = ischedule.user_id AND classes.class_id = ischedule.class_id and users.user_id = ?;', (user_id,))
     user_classes = cur.fetchall()
+    print(user_classes)
     return user_classes
 
+
+
 def get_user_class_posts(username, userclassid):
+    # print(username)
+    # print(userclassid)
     user_id = get_user_id_from_user_name(username)
     con = sql.connect(path.join(ROOT, 'classme.DB'))
     cur = con.cursor()
-    cur.execute('SELET posted, message FROM posts WHERE class_id = ?', (userclassid,))
+    cur.execute('SELECT  users.user_name, posts.posted, posts.message FROM users, posts WHERE users.user_id = posts.user_id AND class_id = ?', (userclassid,))
     class_posts = cur.fetchall()
+    # print(class_posts)
     return class_posts
 
+def add_post(user, classId, message):
+    print('add_post')
+    print(user)
+    print(classId)
+    print(message)
+    user_id = get_user_id_from_user_name(user)
+    print(user_id)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('INSERT INTO posts (user_id, class_id, message) VALUES (?, ?, ?)', (user_id, classId, message))
+    con.commit()
+    con.close()
+    return
+
+def get_class_name_from_class_id(currentClassId):
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT class_name FROM classes WHERE class_id = ?', (currentClassId,))
+    class_name = cur.fetchall()
+    con.close()
+    # print(user_id[0][0])
+    try:
+        test = class_name[0][0]
+    except:
+        return "Are you not in any classes right now."
+    return class_name[0][0]
+
+def is_in_class(username, classId):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT * FROM ischedule WHERE user_id = ? AND class_id = ?', (user_id, classId))
+    isTrue = cur.fetchall()
+    print(isTrue)
+    if not isTrue:
+        return False
+    else:
+        return True
+
+def class_exists(classID):
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT * FROM classes WHERE class_id = ?', (classID, ))
+    isTrue = cur.fetchall()
+    if not isTrue:
+        return False
+    else:
+        return True
+
+def user_join_class(username, classID):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('INSERT INTO ischedule (user_id, class_id) VALUES (?, ?)', (user_id, classID))
+    con.commit()
+    con.close()
+    return
+
+def add_class_and_join_user(username, ccName, ccSection, ccYear, ccSemester):
+    user_id = get_user_id_from_user_name(username)
+    print('Got here')
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('PRAGMA foreign_keys = ON')
+    # try:
+    #     print("add + joing 1")
+    #     cur.execute('INSERT INTO classes (class_name, class_section, class_year, class_semester) VALUES (?, ?, ?, ?)', (ccName, ccSection, ccYear, ccSemester))
+    #     con.commit()
+    #     cur.execute('SELECT class_id FROM classes WHERE class_id = (SELECT MAX(class_id) FROM classes)')
+    #     print("add + joing 2")
+    # except:
+    #     con.close()
+    #     return
+    
+    print("add + joing 1")
+    cur.execute('INSERT INTO classes (class_name, class_section, class_year, class_semester) VALUES (?, ?, ?, ?)', (ccName, ccSection, ccYear, ccSemester))
+    con.commit()
+    cur.execute('SELECT class_id FROM classes WHERE class_id = (SELECT MAX(class_id) FROM classes)')
+    print("add + joing 2")
+
+    new_class_id = cur.fetchall()
+    con.commit()
+    con.close()
+    user_join_class(username, new_class_id[0][0])
+    return 
 
 def get_whole_database():
     con = sql.connect(path.join(ROOT, 'classme.DB'))

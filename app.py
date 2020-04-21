@@ -1,4 +1,4 @@
-from models import user_exists, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, get_user_id_from_user_name
+from models import user_exists, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, add_class_and_join_user
 # add information about server
 from flask import Flask, render_template, request, redirect, url_for
 from flask_cors import CORS
@@ -9,14 +9,17 @@ app = Flask(__name__)
 
 CORS(app)
 
-logged_in_user = None
 user_logged_in = False
+logged_in_user = None
+current_class_id = None
 
 def log_out_user():
     global logged_in_user
     global user_logged_in
+    global current_class_id
     user_logged_in = False
     logged_in_user = None
+    current_class_id = None
 
 def print_user():
     print(str(logged_in_user)  + " " + str(user_logged_in))
@@ -75,13 +78,95 @@ def home():
         print_user()
         if user_logged_in == True:
             global logged_in_user
-            user_classes = get_user_classes(logged_in_user)    
+            user_classes = get_user_classes(logged_in_user)  
+            # print(15.0)
+            # print(logged_in_user)
+            # print(user_classes)  
             if len(user_classes) > 0:
-                user_class_posts = get_user_class_posts(user_logged_in, user_classes[0][0])
-            else: user_class_posts = []  
-            return render_template('home.html', username = logged_in_user, classes = user_classes, posts = user_class_posts)
+                global logged_in_user
+                user_class_posts = get_user_class_posts(logged_in_user, user_classes[0][0])
+                global current_class_id
+                if current_class_id == None:
+                    current_class_id = user_classes[0][0]
+                else:
+                    user_class_posts = get_user_class_posts(logged_in_user, current_class_id)
+            else: 
+                user_class_posts = []
+            current_class_name = get_class_name_from_class_id(current_class_id)
+            # print(16.0)
+            # print(user_classes)
+            # print(user_class_posts) 
+            return render_template('home.html', username = logged_in_user, classes = user_classes, currentClass = current_class_name, posts = user_class_posts)
         else: 
             return redirect(url_for('no_access'))
+    if request.method == 'POST':
+        message = request.form.get('post')
+        if message != None:
+            print('Add post POST')
+            global logged_in_user
+            global current_class_id
+            print(current_class_id)
+            if current_class_id == None:
+                return redirect(url_for('home'))
+            add_post(logged_in_user, current_class_id, message)
+            return redirect(url_for('home'))
+        else:
+            pass
+        searched_class_id = request.form.get('searchClassPosts')
+        if searched_class_id != None:
+            if (is_in_class(logged_in_user, searched_class_id) == True):
+                print(is_in_class(logged_in_user, searched_class_id))
+                global current_class_id 
+                current_class_id = searched_class_id
+                print("current id" + str(current_class_id))
+                return redirect(url_for('home'))
+            else:
+                return redirect(url_for('home'))
+        searched_class_id = request.form.get('searchedClassID')
+        if searched_class_id != None:
+            print('post 1')
+            if(class_exists(searched_class_id)):
+                print('post 2')
+                if(is_in_class(logged_in_user, searched_class_id) == True):
+                    print('post 3')
+                    return redirect(url_for('home'))
+                else:
+                    print('post 5')
+                    user_join_class(logged_in_user, searched_class_id)
+                    print('post 6')
+                    return redirect(url_for('home'))
+            else:
+                print('post 6')
+                return redirect(url_for('home'))
+        print('LAST            LAST          LAST')
+        cc_name = request.form.get('createdClassName')
+        cc_section = request.form.get('createClassSection')
+        cc_year = request.form.get('createdClassYear')
+        cc_semester = request.form.get('createdClassSemester')
+        try:
+            test = int(cc_year)
+        except:
+            return redirect(url_for('home'))
+        cc_year = int(cc_year)
+        print('LAST 2       LSAT     2       LAST 2')
+        print(cc_name)
+        print(cc_section)
+        print(cc_year)
+        print(cc_semester)
+        if (cc_name != None) and (cc_section != None) and (cc_year != None) and (cc_semester != None):
+            print('last            last       last')
+            add_class_and_join_user(logged_in_user, cc_name, cc_section, cc_year, cc_semester)
+        print('finish last')
+        return redirect(url_for('home'))
+        # if len(searched_class) > 0:
+        #     if is_search_class() == True:
+        #         print(searched_class)
+        #         global current_class_id 
+        #         current_class_id = get_class_id_from_class_name(searched_class)
+        #         return redirect(url_for('home'))
+        # else:
+        #     pass
+        
 
 @app.route('/logout', methods=['GET'])
 def logout():
