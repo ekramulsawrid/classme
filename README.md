@@ -12,8 +12,7 @@ Python, SQL, HTML, CSS
 
 ## Features
 
-Database
-Authentication and Authorization
+Database, Authentication and Authorization
 
 ## Installation
 
