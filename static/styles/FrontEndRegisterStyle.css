@@ -6,13 +6,15 @@ body
 .signup{
     width: 300px;
     box-shadow: 0 0 3px 0 rgba(0,0,0,0.3);
-    background:white;
+    background:#f6f5f3;
+    border: 2px solid #7dce94;
     padding: 20px;
     margin: 8% auto 0;
     text-align: center;
 }
+
 .signup h1{
-    color: blueviolet;
+    color: #3d3d3f;
     margin-bottom: 30px;
 }
 .inputbox
@@ -28,6 +30,7 @@ body
 {
     color: #fff;
     width: 100%;
+    height: 40px;
     padding: 10p;
     border-radius:20px;
     font-size: 15px;
@@ -35,5 +38,5 @@ body
     border: none;
     outline: none;
     cursor: pointer;
-    background-color: #1c8adb;
+    background-color: #3d3d3f;
 }

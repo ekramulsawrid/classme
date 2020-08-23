@@ -5,70 +5,204 @@
         <meta name="viewport" content="width=device-width">
         <title>Home | ClassMe</title>
     </head>
+    <style>
+        html {
+            background-color: lightslategrey;
+
+            display: flex;
+            justify-content: center;
+        }
+
+        body {
+            width: auto;
+            max-width: 860px;
+            height: auto;
+            border: 2px solid #7dce94;
+            background-color: #f6f5f3;
+
+            display: flex;
+            justify-content: center;
+            align-content: center;
+            flex-direction: column;
+        }
+
+        .heading {
+            margin: 10px;
+            padding: 10px;
+            height: 40px;
+            background-color: lightgreen;
+            line-height: 40px;
+        }
+        .heading-content {
+            display: inline;
+        }
+
+        .sub-heading {
+            margin: 10px;
+        }
+
+        /* .username {
+            border: 2px solid #7dce94;
+        } */
+
+        .join-create {
+            margin: 10px;
+        }
+
+        .classes-section {
+            margin: 10px;
+        }
+
+        .class-list {
+            width: 100%;
+            /* border: 2px solid #7dce94; */
+            margin-bottom: 10px;
+        }
+
+        .class-chat {
+            width: 100%;
+            /* border: 2px solid #7dce94; */
+            float: left;
+        }
+
+        .class-section-title {
+            margin: 5px;
+        }
+
+        .class-section-other {
+            margin-top: 5px;
+            margin-left: 5px;
+        }
+
+        .classes-name {
+            margin: 5px;
+            height: 200px;
+            max-height: 160px;
+            overflow: auto;
+            border: 2px solid #7dce94;
+        }
+
+        .class-posts {
+            margin:  10px 5px;
+            height: 300px;
+            overflow: auto;
+            border: 2px solid #7dce94;
+            padding: 10px;
+        }
+
+        .post-section {
+            margin: 5px;
+        }
+
+        .post-handle {
+            width: 100%;
+        }
+
+        .post-box {
+            width: 90%;
+            height: 40px;
+            line-height: 20px;
+        }
+
+        .post-submit {
+            width: 8%;
+            height: 100%;
+            height: 46px;
+        }
+
+        .your-post {
+            background-color: rgba(217, 245, 203, 0.6);
+            opacity: 
+        }
+
+        
+
+    </style>
     <body>
-        <div>Home</div>
         <div class='box'>
         </div>
-        <form action='/logout' method='GET'>
-            <input type='submit' value='Go back to Welcome (Log out)'>
-        </form>
-        </br>
-        <div>
-            <div>This is your ClassMe account.</div>
-            <div>Username: {{ username }}</div>
-        </div>
-        </br>
-        <div class='box'>
-            <div>Join a class:</div>
-            <form action='/home' method='POST'>
-                <input placeholder='Enter existing class ID' name='searchedClassID'>
-                <input type='submit' value='Join'>
+        <div class="heading">
+            <div class="heading-content"><b>ClassMe | Home</b></div>
+            <form class="heading-content" style="float: right" action='/logout' method='GET'>
+                <input type='submit' value='Log out'>
             </form>
         </div>
-        <div class='box'>
-            <div>Create a Class and Join:</div>
-            <form action='/home' method='POST'>
-                <input placeholder='Class Name' name='createdClassName'>
-                <input placeholder='Class Section' name='createClassSection'>
-                <input placeholder='Class Year' name='createdClassYear'>
-                <input placeholder='Class Semester' name='createdClassSemester'>
-                <input type='submit' value='Create and Join'>
-            </form>
+        <div class="sub-heading">
+            <div>ClassMe Account.</div>
+            <div class="username">Username: {{ username }}</div>
         </div>
         </br>
-        <div>Your classes:</div>
-        
-        {% for class in classes %}
-            <div>{{ class[0] ~ ' ' ~ class[1] ~ ' ' ~ class[2] ~ ' ' ~ class[3] ~ ' ' ~ class[4] }}</div>
-        {% endfor %}
-        
-        </br>
-        </br>
-        <div class='box'>
-            <div>Go to Another Class (Enter class ID):</div>
-            <form action='/home' method='POST'>
-                <input placeholder='Enter one of your class ID' name='searchClassPosts'>
-                <input type='submit' value='See Posts'>
-            </form>
+
+        <div class="join-create"> 
+            <div class='box'>
+                <div>Join a class:</div>
+                <form action='/home' method='POST'>
+                    <input placeholder='Enter existing class ID' name='searchedClassID'>
+                    <input type='submit' value='Join'>
+                </form>
+            </div>
+            <div class='box'>
+                <div>Create a Class and Join:</div>
+                <form action='/home' method='POST'>
+                    <input style="width: 370px" placeholder='Class Name' name='createdClassName'>
+                    <input style="width: 100px" placeholder='Class Section' name='createClassSection'>
+                    <input style="width: 100px" placeholder='Class Year' name='createdClassYear'>
+                    <input style="width: 100px" placeholder='Class Semester' name='createdClassSemester'>
+                    <input type='submit' value='Create and Join'>
+                </form>
+            </div>
         </div>
         </br>
-        <div>
-            <div>Posts for: {{ currentClass }}</div>
-        </div>
-        </br>
-        <div>
-            {% for post in posts %}
-                <div>&emsp;&emsp;{{ post[1] }}</div>
-                <div>{{post[0]}}:</div>
-                <div>{{ post[2] }}</div>
-                </br>
-            {% endfor %}
-        </div>
-        <div class='box'>
-            <form action='/home' method='POST'>
-                <input placeholder='Your Post' name='post'>
-                <input type='submit' value='Post'>
-            </form>
+        <div class="classes-section">
+            <div class="class-list">
+                <div class="class-section-title">Your Classes</div>
+                <div class="classes-name">
+                    {% for class in classes %}
+                    <div>{{ class[0] ~ ' ' ~ class[1] ~ ' ' ~ class[2] ~ ' ' ~ class[3] ~ ' ' ~ class[4] }}</div>
+                    {% endfor %}
+                </div>   
+            </div>
+            </br>
+            <div class="class-chat">
+                <div class='box'>
+                    <div class="class-section-title">Class Posts</div>
+                    <form class="class-section-other" action='/home' method='POST'>
+                        <input placeholder='Enter one of your class ID' name='searchClassPosts'>
+                        <input type='submit' value='See Posts'>
+                    </form>
+                </div>
+            </br>
+                <div>
+                    <div class="class-section-other">Posts for {{ currentClass }}</div>
+                </div>
+                <div class="class-posts" id="class-posts-id">
+                    {% for post in posts %}
+                        {% if post[0] == username %}
+                            <div class="your-post">
+                                <div><b>{{post[0]}}</b>&emsp;{{ post[1] }}</div>
+                                <div>{{ post[2] }}</div>
+                            </div>
+                            </br>
+                        {% else %}
+                            <div>
+                                <div><b>{{post[0]}}</b>&emsp;{{ post[1] }}</div>
+                                <div>{{ post[2] }}</div>
+                            </div>
+                            </br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class='box post-section'>
+                    <form class="post-handle" action='/home' method='POST'>
+                        <input class="post-box" placeholder='Your Post' name='post'>
+                        <input class="post-submit" row="4" type='submit' value='Post'>
+                    </form>
+                </div>
+            </div>
         </div>
     </body>
+    <script>
+        var scrollBox = document.getElementById("class-posts-id");
+        scrollBox.scrollTop = scrollBox.scrollHeight;
+    </script>
 </html>
