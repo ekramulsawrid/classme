@@ -1,4 +1,4 @@
-from models import user_exists, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, add_class_and_join_user
+from models import user_exists, get_user_first_name, get_user_last_name, get_user_email, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, add_class_and_join_user
 # add information about server
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -77,6 +77,9 @@ def home():
         print_user()
         if user_logged_in == True:
             global logged_in_user
+            user_first_name = get_user_first_name(logged_in_user)
+            user_last_name = get_user_last_name(logged_in_user)
+            user_email =  get_user_email(logged_in_user)
             user_classes = get_user_classes(logged_in_user)  
             # print(15.0)
             # print(logged_in_user)
@@ -94,7 +97,7 @@ def home():
             # print(16.0)
             # print(user_classes)
             # print(user_class_posts) 
-            return render_template('home.html', username = logged_in_user, classes = user_classes, currentClass = current_class_name, posts = user_class_posts)
+            return render_template('home.html', username = logged_in_user, firstName = user_first_name, lastName = user_last_name, userEmail = user_email, classes = user_classes, currentClass = current_class_name, posts = user_class_posts)
         else: 
             return redirect(url_for('no_access'))
     if request.method == 'POST':

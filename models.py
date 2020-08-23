@@ -65,6 +65,34 @@ def get_user_id_from_user_name(username):
     # print(user_id[0][0])
     return user_id[0][0]
 
+def get_user_first_name(username):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT first_name FROM users WHERE user_id = ?', (user_id,))
+    user_first_name = cur.fetchall()
+    con.close
+    return user_first_name[0][0]
+
+def get_user_last_name(username):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT last_name FROM users WHERE user_id = ?', (user_id,))
+    user_last_name = cur.fetchall()
+    con.close
+    return user_last_name[0][0]
+
+def get_user_email(username):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('SELECT email FROM users WHERE user_id = ?', (user_id,))
+    user_email = cur.fetchall()
+    con.close
+    return user_email[0][0]
+
+
 def get_user_classes(username):
     user_id = get_user_id_from_user_name(username)
     con = sql.connect(path.join(ROOT, 'classme.DB'))
