@@ -1,4 +1,4 @@
-from models import user_exists, get_user_first_name, get_user_last_name, get_user_email, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, add_class_and_join_user
+from models import user_exists, get_user_first_name, get_user_last_name, get_user_email, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, user_leave_class, add_class_and_join_user
 # add information about server
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -89,6 +89,8 @@ def home():
                 global current_class_id
                 if current_class_id == None:
                     current_class_id = user_classes[0][0]
+                    print("CURRENT CLASS ID TYPE")
+                    print(type(current_class_id))
                 else:
                     user_class_posts = get_user_class_posts(logged_in_user, current_class_id)
             else: 
@@ -115,7 +117,7 @@ def home():
         if searched_class_id != None:
             if (is_in_class(logged_in_user, searched_class_id) == True):
                 print(is_in_class(logged_in_user, searched_class_id))
-                current_class_id = searched_class_id
+                current_class_id = int(searched_class_id)
                 print("current id" + str(current_class_id))
                 return redirect(url_for('home'))
             else:
@@ -136,6 +138,47 @@ def home():
             else:
                 print('post 6')
                 return redirect(url_for('home'))
+
+        try:
+            searched_leave_class_id = request.form.get('searchedLeaveClassID')
+            if searched_leave_class_id != None:
+                searched_leave_class_id = int(searched_leave_class_id)
+        except:
+            return redirect(url_for('home'))
+        if searched_leave_class_id != None:
+            if (class_exists(searched_leave_class_id)):
+                if (is_in_class(logged_in_user, searched_leave_class_id) == True):
+                    user_leave_class(logged_in_user, searched_leave_class_id)
+                    global current_class_id
+                    global logged_in_user
+                    user_classes = get_user_classes(logged_in_user)
+                    if current_class_id == searched_leave_class_id: 
+                        global current_class_id
+                        if len(user_classes) > 0:
+                            user_first_name = get_user_first_name(logged_in_user)
+                            user_last_name = get_user_last_name(logged_in_user)
+                            user_email =  get_user_email(logged_in_user)
+                            user_classes = get_user_classes(logged_in_user)
+                            current_class_id = user_classes[0][0]
+                            user_class_posts = get_user_class_posts(logged_in_user, current_class_id)
+                            current_class_name = get_class_name_from_class_id(current_class_id)
+                            return render_template('home.html', username = logged_in_user, firstName = user_first_name, lastName = user_last_name, userEmail = user_email, classes = user_classes, currentClass = current_class_name, posts = user_class_posts)
+                        else:
+                            user_first_name = get_user_first_name(logged_in_user)
+                            user_last_name = get_user_last_name(logged_in_user)
+                            user_email =  get_user_email(logged_in_user)
+                            user_classes = get_user_classes(logged_in_user)
+                            current_class_id = None
+                            user_class_posts = []
+                            current_class_name = get_class_name_from_class_id(current_class_id)
+                            return render_template('home.html', username = logged_in_user, firstName = user_first_name, lastName = user_last_name, userEmail = user_email, classes = user_classes, currentClass = current_class_name, posts = user_class_posts)
+                    else:
+                        return redirect(url_for('home'))
+                else:
+                    return redirect(url_for('home'))
+            else:
+                return redirect(url_for('home'))
+
         print('LAST            LAST          LAST')
         cc_name = request.form.get('createdClassName')
         cc_section = request.form.get('createClassSection')

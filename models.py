@@ -46,6 +46,7 @@ def get_users_database():
     cur = con.cursor()
     cur.execute('SELECT * FROM users')
     users = cur.fetchall()
+    con.close()
     return users
 
 def get_user_id_from_user_name(username):
@@ -71,7 +72,7 @@ def get_user_first_name(username):
     cur = con.cursor()
     cur.execute('SELECT first_name FROM users WHERE user_id = ?', (user_id,))
     user_first_name = cur.fetchall()
-    con.close
+    con.close()
     return user_first_name[0][0]
 
 def get_user_last_name(username):
@@ -80,7 +81,7 @@ def get_user_last_name(username):
     cur = con.cursor()
     cur.execute('SELECT last_name FROM users WHERE user_id = ?', (user_id,))
     user_last_name = cur.fetchall()
-    con.close
+    con.close()
     return user_last_name[0][0]
 
 def get_user_email(username):
@@ -89,7 +90,7 @@ def get_user_email(username):
     cur = con.cursor()
     cur.execute('SELECT email FROM users WHERE user_id = ?', (user_id,))
     user_email = cur.fetchall()
-    con.close
+    con.close()
     return user_email[0][0]
 
 
@@ -99,6 +100,7 @@ def get_user_classes(username):
     cur = con.cursor()
     cur.execute('SELECT classes.class_id, classes.class_name, classes.class_section, classes.class_year, classes.class_semester FROM users, classes, ischedule WHERE users.user_id = ischedule.user_id AND classes.class_id = ischedule.class_id and users.user_id = ?;', (user_id,))
     user_classes = cur.fetchall()
+    con.close()
     print(user_classes)
     return user_classes
 
@@ -112,6 +114,7 @@ def get_user_class_posts(username, userclassid):
     cur = con.cursor()
     cur.execute('SELECT  users.user_name, posts.posted, posts.message FROM users, posts WHERE users.user_id = posts.user_id AND class_id = ?', (userclassid,))
     class_posts = cur.fetchall()
+    con.close()
     # print(class_posts)
     return class_posts
 
@@ -148,6 +151,7 @@ def is_in_class(username, classId):
     cur = con.cursor()
     cur.execute('SELECT * FROM ischedule WHERE user_id = ? AND class_id = ?', (user_id, classId))
     isTrue = cur.fetchall()
+    con.close()
     print(isTrue)
     if not isTrue:
         return False
@@ -159,6 +163,7 @@ def class_exists(classID):
     cur = con.cursor()
     cur.execute('SELECT * FROM classes WHERE class_id = ?', (classID, ))
     isTrue = cur.fetchall()
+    con.close()
     if not isTrue:
         return False
     else:
@@ -172,6 +177,16 @@ def user_join_class(username, classID):
     con.commit()
     con.close()
     return
+
+def user_leave_class(username, classID):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    cur.execute('DELETE FROM ischedule WHERE user_id = ? AND class_id = ?', (user_id, classID))
+    con.commit()
+    con.close()
+    return
+
 
 def add_class_and_join_user(username, ccName, ccSection, ccYear, ccSemester):
     user_id = get_user_id_from_user_name(username)
@@ -214,5 +229,6 @@ def get_whole_database():
     ischedule = cur.fetchall()
     cur.execute('SELECT * FROM login')
     login = cur.fetchall()
+    con.close()
     return users, classes, posts, ischedule, login
      
