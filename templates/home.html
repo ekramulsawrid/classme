@@ -134,7 +134,14 @@
             <div>Name: {{firstName}} {{lastName}}</div>
             <div>Email: {{userEmail}}</div>
         </div>
-        </br>
+        <div class="sub-heading">
+            <div>Change Name:</div>
+            <form action='/home' method="POST">
+                <input placeholder="First Name" name="firstNameChange">
+                <input placeholder="Last Name" name="lastNameChange">
+                <input type='submit' value="Change">
+            </form>
+        </div>
 
         <div class="join-create"> 
             <div class='box'>

@@ -118,6 +118,18 @@ def get_user_class_posts(username, userclassid):
     # print(class_posts)
     return class_posts
 
+def change_user_name(username, firstName, lastName):
+    user_id = get_user_id_from_user_name(username)
+    con = sql.connect(path.join(ROOT, 'classme.DB'))
+    cur = con.cursor()
+    if lastName == None:
+        cur.execute('UPDATE users SET first_name = ? WHERE user_id = ?', (firstName, user_id))
+    else:
+        cur.execute('UPDATE users SET first_name = ?, last_name = ? WHERE user_id = ?', (firstName, lastName, user_id))
+    con.commit()
+    con.close()
+
+
 def add_post(user, classId, message):
     print('add_post')
     print(user)

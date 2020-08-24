@@ -1,4 +1,4 @@
-from models import user_exists, get_user_first_name, get_user_last_name, get_user_email, get_users_database, get_whole_database, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, user_leave_class, add_class_and_join_user
+from models import user_exists, get_user_first_name, get_user_last_name, get_user_email, get_users_database, get_whole_database, change_user_name, user_registered, get_user_classes, get_user_class_posts, add_post, is_in_class, get_class_name_from_class_id, class_exists, user_join_class, user_leave_class, add_class_and_join_user
 # add information about server
 from flask import Flask, render_template, request, redirect, url_for
 
@@ -103,6 +103,7 @@ def home():
         else: 
             return redirect(url_for('no_access'))
     if request.method == 'POST':
+
         message = request.form.get('post')
         if message != None:
             print('Add post POST')
@@ -114,6 +115,7 @@ def home():
         else:
             pass
         searched_class_id = request.form.get('searchClassPosts')
+
         if searched_class_id != None:
             if (is_in_class(logged_in_user, searched_class_id) == True):
                 print(is_in_class(logged_in_user, searched_class_id))
@@ -122,6 +124,7 @@ def home():
                 return redirect(url_for('home'))
             else:
                 return redirect(url_for('home'))
+        
         searched_class_id = request.form.get('searchedClassID')
         if searched_class_id != None:
             print('post 1')
@@ -179,6 +182,17 @@ def home():
             else:
                 return redirect(url_for('home'))
 
+        first_name_change = request.form.get('firstNameChange')
+        last_name_change = request.form.get('lastNameChange')
+        if first_name_change != None:
+            if len(first_name_change) > 0:
+                change_user_name(logged_in_user, first_name_change, last_name_change)
+                new_first_name = get_user_first_name(logged_in_user)
+                new_last_name = get_user_last_name(logged_in_user)
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('home'))
+
         print('LAST            LAST          LAST')
         cc_name = request.form.get('createdClassName')
         cc_section = request.form.get('createClassSection')
@@ -207,6 +221,7 @@ def home():
         #         return redirect(url_for('home'))
         # else:
         #     pass
+        
         
 
 @app.route('/logout', methods=['GET'])
