@@ -6,6 +6,9 @@ Website where students can create and join class groups.
 
 Ekramul Sawrid
 
+## Initial Contributor
+Matt (front-end design of login and register pages)
+
 ## Languages
 
 Python, SQL, HTML, CSS
