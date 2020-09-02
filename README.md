@@ -6,8 +6,8 @@ Website where students can create and join class groups.
 
 Ekramul Sawrid
 
-## Initial Contributor
-Matt (front-end design of login and register pages)
+## Collaborators
+Tsz Chung "Matt" Cheung (initial front-end GUI design of login and register pages)
 
 ## Languages
 
