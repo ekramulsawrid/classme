@@ -13,10 +13,6 @@ Tsz Chung "Matt" Cheung (initial front-end GUI design of login and register page
 
 Python, SQL, HTML, CSS
 
-## Features
-
-Database, Authentication and Authorization
-
 ## Installation
 
 1) In your console or terminal, go to the directory you want to clone this respository in.
