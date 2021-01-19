@@ -18,6 +18,11 @@ Python, SQL, HTML, CSS
 1) In your console or terminal, go to the directory you want to clone this respository in.
 2) Type `git clone https://github.com/ekramulsawrid/classme.git` to clone to that directory.
 
+## Implementation
+1) In your console or terminal, go to the repository 
+3) Type `python app.py` to run and open in web browser.
+
+
 ## Contributing
 
 Any contributions are welcome and will be greatly appreciated. Here are a few ways you can help:
