@@ -13,6 +13,13 @@ Tsz Chung "Matt" Cheung (initial front-end GUI design of login and register page
 
 Python, SQL, HTML, CSS
 
+## Screenshots
+
+<img src="/images/welcome_page.PNG">
+<img src="/images/login_page.PNG">
+<img src="/images/signup_page.PNG">
+<img src="/images/home_page.PNG">
+
 ## Installation
 
 1) In your console or terminal, go to the directory you want to clone this respository in.
